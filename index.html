@@ -19,16 +19,28 @@
         <div class="currencies">
             <div class="field">
                 <label for="from">From</label>
-                <select id="from" name="from">
-                    <option value="" disabled selected>Select a currency</option>
-                </select>
+                <div class="currency-picker" id="from-picker">
+                    <div class="picker-control">
+                        <span class="picker-flag-slot" aria-hidden="true"></span>
+                        <input id="from" name="from" type="text" placeholder="Select a currency"
+                            role="combobox" aria-autocomplete="list" aria-expanded="false"
+                            aria-controls="from-options" autocomplete="off">
+                    </div>
+                    <ul class="picker-options" id="from-options" role="listbox" hidden></ul>
+                </div>
             </div>
 
             <div class="field">
                 <label for="to">To</label>
-                <select id="to" name="to">
-                    <option value="" disabled selected>Select a currency</option>
-                </select>
+                <div class="currency-picker" id="to-picker">
+                    <div class="picker-control">
+                        <span class="picker-flag-slot" aria-hidden="true"></span>
+                        <input id="to" name="to" type="text" placeholder="Select a currency"
+                            role="combobox" aria-autocomplete="list" aria-expanded="false"
+                            aria-controls="to-options" autocomplete="off">
+                    </div>
+                    <ul class="picker-options" id="to-options" role="listbox" hidden></ul>
+                </div>
             </div>
         </div>
 
