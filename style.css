@@ -70,24 +70,14 @@ a {
 .brand {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
     color: #1e293b;
-    font-size: 20px;
-    font-weight: 750;
-    letter-spacing: -0.5px;
     text-decoration: none;
 }
 
-.brand-mark {
-    display: grid;
-    width: 34px;
-    height: 34px;
-    place-items: center;
-    color: #ffffff;
-    background: linear-gradient(140deg, #6366f1, #4338ca);
-    border-radius: 11px;
-    box-shadow: 0 5px 12px rgba(79, 70, 229, 0.25);
-    font-size: 18px;
+.brand-logo {
+    display: block;
+    width: 180px;
+    height: auto;
 }
 
 .nav-links {
@@ -110,6 +100,21 @@ a {
 .nav-link.is-active {
     color: var(--indigo);
     background: #eef2ff;
+}
+
+.nav-link.nav-cta,
+.nav-link.nav-cta:hover,
+.nav-link.nav-cta.is-active {
+    padding-right: 19px;
+    padding-left: 19px;
+    color: #ffffff;
+    background: var(--indigo);
+    box-shadow: 0 5px 13px rgba(79, 70, 229, 0.2);
+}
+
+.nav-link.nav-cta:hover {
+    background: var(--indigo-dark);
+    transform: translateY(-1px);
 }
 
 .page-section {
@@ -149,7 +154,8 @@ a {
     letter-spacing: 1.8px;
 }
 
-.hero-copy h1 {
+.hero-copy h1,
+.hero-copy h2 {
     color: #14213b;
     font-size: clamp(32px, 5vw, 52px);
     font-weight: 750;
@@ -495,31 +501,107 @@ a {
 
 .trends-section {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     background:
-        radial-gradient(ellipse at 92% 10%, rgba(224, 231, 255, 0.65), transparent 32%),
-        linear-gradient(180deg, #f8fcff, #f1f7ff);
+        radial-gradient(ellipse at 90% 4%, rgba(199, 210, 254, 0.6), transparent 31%),
+        radial-gradient(ellipse at 10% 12%, rgba(255, 255, 255, 0.95), transparent 36%),
+        linear-gradient(160deg, #eaf8ff 0%, #f5f8ff 52%, #edf0ff 100%);
 }
 
 .trends-inner {
-    padding-top: 74px;
-    padding-bottom: 62px;
+    padding-top: 28px;
+    padding-bottom: 56px;
 }
 
-.section-heading {
-    margin-bottom: 25px;
+.trend-hero {
+    max-width: 760px;
+    margin-bottom: 18px;
 }
 
-.section-heading h2 {
+.trend-hero h1 {
     color: #14213b;
-    font-size: clamp(29px, 4vw, 38px);
-    letter-spacing: -1.1px;
+    font-size: clamp(36px, 4vw, 48px);
+    font-weight: 760;
+    letter-spacing: -1.8px;
+    line-height: 1.08;
 }
 
-.section-heading > p:last-child {
+.trend-hero > p:last-child {
     margin-top: 9px;
-    color: var(--muted);
-    font-size: 15px;
+    color: #53647b;
+    font-size: 16px;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.trend-hero-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 11px;
+    margin-top: 16px;
+}
+
+.hero-convert-button,
+.hero-trends-button {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 0 19px;
+    border: 1px solid var(--indigo);
+    border-radius: 11px;
+    font-size: 14px;
+    font-weight: 750;
+    text-decoration: none;
+    transition: color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.hero-convert-button {
+    color: #ffffff;
+    background: var(--indigo);
+    box-shadow: 0 8px 18px rgba(79, 70, 229, 0.23);
+}
+
+.hero-convert-button:hover {
+    background: var(--indigo-dark);
+    box-shadow: 0 11px 22px rgba(79, 70, 229, 0.28);
+    transform: translateY(-2px);
+}
+
+.hero-convert-button span {
+    font-size: 17px;
+}
+
+.hero-trends-button {
+    color: var(--indigo);
+    background: rgba(255, 255, 255, 0.55);
+}
+
+.hero-trends-button:hover {
+    color: #ffffff;
+    background: var(--indigo);
+    transform: translateY(-2px);
+}
+
+#trend-chart-area {
+    scroll-margin-top: calc(var(--header-height) + 18px);
+}
+
+.trend-compare {
+    margin-top: 15px;
+    padding: 18px 22px;
+    background: var(--surface);
+    border: 1px solid #e4ebf3;
+    border-radius: 17px;
+    box-shadow: 0 12px 30px rgba(41, 64, 104, 0.06);
+}
+
+.trend-compare .compare-controls {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
 }
 
 .trend-controls,
@@ -747,7 +829,7 @@ a {
 
 .trend-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1.9fr) minmax(290px, 1fr);
+    grid-template-columns: minmax(0, 2.1fr) minmax(285px, 0.95fr);
     align-items: stretch;
     gap: 15px;
     margin-top: 15px;
@@ -786,9 +868,33 @@ a {
     white-space: nowrap;
 }
 
+.chart-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chart-convert-button {
+    min-height: 30px;
+    padding: 0 10px;
+    color: var(--indigo);
+    background: #eef2ff;
+    border: 1px solid #e0e7ff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 750;
+    transition: color 0.18s, background 0.18s;
+}
+
+.chart-convert-button:hover {
+    color: #ffffff;
+    background: var(--indigo);
+}
+
 .chart-wrap {
     position: relative;
-    height: 300px;
+    height: 390px;
     margin-top: 13px;
 }
 
@@ -932,6 +1038,12 @@ a {
     font-size: 11px;
 }
 
+.footer-brand {
+    margin-right: 6px;
+    color: #ffffff;
+    font-size: 13px;
+}
+
 .footer-inner a {
     color: #c7d2fe;
     text-decoration: none;
@@ -986,7 +1098,7 @@ a {
     }
 
     .trends-inner {
-        padding-top: 54px;
+        padding-top: 32px;
         padding-bottom: 46px;
     }
 
@@ -1015,15 +1127,11 @@ a {
     }
 
     .brand {
-        gap: 7px;
-        font-size: 17px;
+        flex: 0 1 auto;
     }
 
-    .brand-mark {
-        width: 30px;
-        height: 30px;
-        border-radius: 9px;
-        font-size: 16px;
+    .brand-logo {
+        width: 155px;
     }
 
     .nav-links {
@@ -1033,6 +1141,44 @@ a {
     .nav-link {
         padding: 8px 10px;
         font-size: 12px;
+    }
+
+    .nav-link.nav-cta,
+    .nav-link.nav-cta:hover,
+    .nav-link.nav-cta.is-active {
+        padding-right: 13px;
+        padding-left: 13px;
+    }
+
+    .trends-inner {
+        padding-top: 26px;
+    }
+
+    .trend-hero {
+        margin-bottom: 19px;
+    }
+
+    .trend-hero h1 {
+        font-size: clamp(30px, 8vw, 40px);
+        letter-spacing: -1.2px;
+    }
+
+    .trend-hero > p:last-child {
+        margin-top: 9px;
+        font-size: 13px;
+        white-space: normal;
+    }
+
+    .trend-hero-actions {
+        gap: 8px;
+        margin-top: 13px;
+    }
+
+    .hero-convert-button,
+    .hero-trends-button {
+        min-height: 44px;
+        padding: 0 14px;
+        font-size: 13px;
     }
 
     .hero-copy {
@@ -1091,12 +1237,11 @@ a {
         padding: 8px;
     }
 
-    .section-heading > p:last-child {
-        font-size: 13px;
-        line-height: 1.5;
+    .trend-controls {
+        padding: 16px;
     }
 
-    .trend-controls {
+    .trend-compare {
         padding: 16px;
     }
 
@@ -1147,7 +1292,20 @@ a {
     }
 
     .chart-wrap {
-        height: 250px;
+        height: 290px;
+    }
+
+    .chart-actions {
+        align-items: flex-end;
+        flex-direction: column;
+    }
+
+    .chart-panel .panel-heading {
+        gap: 7px;
+    }
+
+    .chart-convert-button {
+        white-space: nowrap;
     }
 
     .footer-inner {
@@ -1173,6 +1331,13 @@ a {
     .nav-link {
         padding: 7px 8px;
         font-size: 11px;
+    }
+
+    .nav-link.nav-cta,
+    .nav-link.nav-cta:hover,
+    .nav-link.nav-cta.is-active {
+        padding-right: 10px;
+        padding-left: 10px;
     }
 
     .converter-card {
@@ -1204,6 +1369,33 @@ a {
     }
 }
 
+.floating-convert {
+    display: none;
+    position: fixed;
+    z-index: 50;
+    right: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    min-height: 46px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 19px;
+    color: #ffffff;
+    background: var(--indigo);
+    border-radius: 999px;
+    box-shadow: 0 9px 24px rgba(49, 46, 129, 0.3);
+    font-size: 13px;
+    font-weight: 750;
+    text-decoration: none;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.floating-convert:hover {
+    background: var(--indigo-dark);
+}
+
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
@@ -1215,5 +1407,14 @@ a {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .floating-convert.is-visible {
+        display: inline-flex;
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
     }
 }

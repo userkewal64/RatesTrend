@@ -1,6 +1,8 @@
 // Navigation
 const navLinks = Array.from(document.querySelectorAll(".nav-link"));
 const pageSections = Array.from(document.querySelectorAll(".page-section"));
+const floatingConvert = document.getElementById("floating-convert");
+const converterSection = document.getElementById("converter");
 
 if ("IntersectionObserver" in window) {
   const sectionObserver = new IntersectionObserver((entries) => {
@@ -17,24 +19,18 @@ if ("IntersectionObserver" in window) {
       else link.removeAttribute("aria-current");
     });
   }, {
-    rootMargin: "-88px 0px -45% 0px",
+    rootMargin: "-80px 0px -45% 0px",
     threshold: [0, 0.1, 0.25, 0.5]
   });
 
   pageSections.forEach((section) => sectionObserver.observe(section));
+
+  const converterVisibilityObserver = new IntersectionObserver((entries) => {
+    const converterVisible = entries.some((entry) => entry.isIntersecting);
+    floatingConvert.classList.toggle("is-visible", !converterVisible);
+  }, { threshold: 0.15 });
+  converterVisibilityObserver.observe(converterSection);
 }
-
-// Converter
-const amountInput = document.getElementById("amount");
-const convertBtn = document.getElementById("convert");
-const resultEl = document.getElementById("result");
-const rateInfoEl = document.getElementById("rate-info");
-const popularRatesEl = document.getElementById("popular-rates");
-const footerUpdatedEl = document.getElementById("footer-updated");
-
-let rates = {};
-let lastUpdated = "";
-let converterCurrencies = [];
 
 // Pickers
 const currencyCountries = {
@@ -310,118 +306,6 @@ document.addEventListener("click", (event) => {
     }
   });
 });
-
-// Converter rates
-async function loadCurrencies() {
-  try {
-    const response = await fetch("https://open.er-api.com/v6/latest/USD");
-    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-    const data = await response.json();
-    if (!data.rates || typeof data.rates !== "object") {
-      throw new Error("The exchange-rate response did not contain currency rates.");
-    }
-
-    rates = data.rates;
-    lastUpdated = data.time_last_update_utc || "";
-    converterCurrencies = Object.keys(rates)
-      .sort()
-      .map((code) => buildCurrencyItem(code));
-
-    setPickerItems(fromPicker, converterCurrencies, "");
-    setPickerItems(toPicker, converterCurrencies, "");
-    renderPopularRates();
-    updateFooterTimestamp();
-  } catch (error) {
-    console.error("Could not load currencies:", error);
-    fromPicker.input.placeholder = "Failed to load currencies";
-    toPicker.input.placeholder = "Failed to load currencies";
-    fromPicker.input.disabled = true;
-    toPicker.input.disabled = true;
-    rateInfoEl.textContent = "Live currency rates could not be loaded. Please refresh to try again.";
-  }
-}
-
-function showConversionResult(message, isError) {
-  resultEl.textContent = message;
-  resultEl.classList.toggle("result-error", Boolean(isError));
-  resultEl.classList.remove("result-pop");
-  if (!isError) {
-    void resultEl.offsetWidth;
-    resultEl.classList.add("result-pop");
-  }
-}
-
-function convert() {
-  const amount = parseFloat(amountInput.value);
-  const from = fromPicker.selectedCode;
-  const to = toPicker.selectedCode;
-
-  if (!from || !to) {
-    showConversionResult("Please select both currencies.", true);
-    return;
-  }
-  if (!Number.isFinite(amount) || amount < 0) {
-    showConversionResult("Please enter a valid amount.", true);
-    return;
-  }
-  if (!rates[from] || !rates[to]) {
-    showConversionResult("Rates are not loaded yet. Try again.", true);
-    return;
-  }
-
-  const converted = (amount / rates[from]) * rates[to];
-  const formatted = new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 2
-  }).format(converted);
-
-  showConversionResult(`${amount} ${from} = ${formatted} ${to}`, false);
-  const rate = rates[to] / rates[from];
-  rateInfoEl.textContent =
-    `1 ${from} = ${rate.toFixed(4)} ${to} · Updated ${lastUpdated}`;
-}
-
-convertBtn.addEventListener("click", convert);
-document.getElementById("swap").addEventListener("click", () => {
-  if (!fromPicker.selectedCode || !toPicker.selectedCode) return;
-  const fromCode = fromPicker.selectedCode;
-  selectCurrency(fromPicker, toPicker.selectedCode);
-  selectCurrency(toPicker, fromCode);
-  convert();
-});
-
-function renderPopularRates() {
-  const popularCodes = ["EUR", "GBP", "JPY", "INR", "AUD", "CAD"];
-  popularRatesEl.replaceChildren();
-
-  popularCodes.forEach((code) => {
-    const currency = converterCurrencies.find((item) => item.code === code);
-    if (!currency || !rates[code]) return;
-
-    const button = document.createElement("button");
-    button.className = "popular-rate";
-    button.type = "button";
-    button.setAttribute("aria-label", `Convert 1 USD to ${currency.name}`);
-    button.appendChild(createFlag(currency.countryCode, currency.countryName));
-
-    const text = document.createElement("span");
-    text.className = "popular-rate-text";
-    const pair = document.createElement("strong");
-    pair.textContent = `USD / ${currency.code}`;
-    const value = document.createElement("span");
-    value.textContent = rates[code].toFixed(4);
-    text.append(pair, value);
-    button.appendChild(text);
-
-    button.addEventListener("click", () => {
-      amountInput.value = "1";
-      selectCurrency(fromPicker, "USD");
-      selectCurrency(toPicker, code);
-      convert();
-      document.getElementById("converter").scrollIntoView({ behavior: "smooth" });
-    });
-    popularRatesEl.appendChild(button);
-  });
-}
 
 // Trends
 const trendSection = document.getElementById("trends");
@@ -855,6 +739,149 @@ function renderTrendChart(history, dates, base, quote, comparisons) {
         }
       }
     }
+  });
+}
+
+// Converter
+const amountInput = document.getElementById("amount");
+const convertBtn = document.getElementById("convert");
+const resultEl = document.getElementById("result");
+const rateInfoEl = document.getElementById("rate-info");
+const popularRatesEl = document.getElementById("popular-rates");
+const footerUpdatedEl = document.getElementById("footer-updated");
+
+let rates = {};
+let lastUpdated = "";
+let converterCurrencies = [];
+
+async function loadCurrencies() {
+  try {
+    const response = await fetch("https://open.er-api.com/v6/latest/USD");
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+    const data = await response.json();
+    if (!data.rates || typeof data.rates !== "object") {
+      throw new Error("The exchange-rate response did not contain currency rates.");
+    }
+
+    rates = data.rates;
+    lastUpdated = data.time_last_update_utc || "";
+    converterCurrencies = Object.keys(rates)
+      .sort()
+      .map((code) => buildCurrencyItem(code));
+
+    setPickerItems(fromPicker, converterCurrencies, "");
+    setPickerItems(toPicker, converterCurrencies, "");
+    renderPopularRates();
+    updateFooterTimestamp();
+  } catch (error) {
+    console.error("Could not load currencies:", error);
+    fromPicker.input.placeholder = "Failed to load currencies";
+    toPicker.input.placeholder = "Failed to load currencies";
+    fromPicker.input.disabled = true;
+    toPicker.input.disabled = true;
+    rateInfoEl.textContent = "Live currency rates could not be loaded. Please refresh to try again.";
+  }
+}
+
+function showConversionResult(target, message, isError) {
+  target.textContent = message;
+  target.classList.toggle("result-error", Boolean(isError));
+  target.classList.remove("result-pop");
+  if (!isError) {
+    void target.offsetWidth;
+    target.classList.add("result-pop");
+  }
+}
+
+function convertPair(amountElement, fromPickerForConversion, toPickerForConversion, output, rateOutput) {
+  const amount = parseFloat(amountElement.value);
+  const from = fromPickerForConversion.selectedCode;
+  const to = toPickerForConversion.selectedCode;
+  const showError = (message) => {
+    rateOutput.textContent = "";
+    showConversionResult(output, message, true);
+  };
+
+  if (!from || !to) {
+    showError("Please select both currencies.");
+    return;
+  }
+  if (!Number.isFinite(amount) || amount < 0) {
+    showError("Please enter a valid amount.");
+    return;
+  }
+  if (!rates[from] || !rates[to]) {
+    showError("Rates are not loaded yet. Try again.");
+    return;
+  }
+
+  const converted = (amount / rates[from]) * rates[to];
+  const formatted = new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 2
+  }).format(converted);
+
+  showConversionResult(output, `${amount} ${from} = ${formatted} ${to}`, false);
+  const rate = rates[to] / rates[from];
+  rateOutput.textContent =
+    `1 ${from} = ${rate.toFixed(4)} ${to} · Updated ${lastUpdated}`;
+}
+
+function convert() {
+  convertPair(amountInput, fromPicker, toPicker, resultEl, rateInfoEl);
+}
+
+convertBtn.addEventListener("click", convert);
+document.getElementById("swap").addEventListener("click", () => {
+  if (!fromPicker.selectedCode || !toPicker.selectedCode) return;
+  const fromCode = fromPicker.selectedCode;
+  selectCurrency(fromPicker, toPicker.selectedCode);
+  selectCurrency(toPicker, fromCode);
+  convert();
+});
+
+document.getElementById("convert-trend-pair").addEventListener("click", () => {
+  const base = trendBasePicker.selectedCode;
+  const quote = trendQuotePicker.selectedCode;
+  if (!base || !quote) return;
+
+  amountInput.value = "1";
+  selectCurrency(fromPicker, base);
+  selectCurrency(toPicker, quote);
+  convert();
+  converterSection.scrollIntoView({ behavior: "smooth" });
+});
+
+function renderPopularRates() {
+  const popularCodes = ["EUR", "GBP", "JPY", "INR", "AUD", "CAD"];
+  popularRatesEl.replaceChildren();
+
+  popularCodes.forEach((code) => {
+    const currency = converterCurrencies.find((item) => item.code === code);
+    if (!currency || !rates[code]) return;
+
+    const button = document.createElement("button");
+    button.className = "popular-rate";
+    button.type = "button";
+    button.setAttribute("aria-label", `Convert 1 USD to ${currency.name}`);
+    button.appendChild(createFlag(currency.countryCode, currency.countryName));
+
+    const text = document.createElement("span");
+    text.className = "popular-rate-text";
+    const pair = document.createElement("strong");
+    pair.textContent = `USD / ${currency.code}`;
+    const value = document.createElement("span");
+    value.textContent = rates[code].toFixed(4);
+    text.append(pair, value);
+    button.appendChild(text);
+
+    button.addEventListener("click", () => {
+      amountInput.value = "1";
+      selectCurrency(fromPicker, "USD");
+      selectCurrency(toPicker, code);
+      convert();
+      converterSection.scrollIntoView({ behavior: "smooth" });
+    });
+    popularRatesEl.appendChild(button);
   });
 }
 

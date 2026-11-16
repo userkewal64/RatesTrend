@@ -4,30 +4,183 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#eff9ff">
-    <title>Ratewise — Currency Converter &amp; Trends</title>
+    <meta name="description" content="Track currency trends, compare exchange rates, and convert currencies with RatesTrend.">
+    <link rel="icon" type="image/svg+xml" href="ratestrend-icon.svg">
+    <title>RatesTrend | Currency Trends &amp; Converter</title>
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
     <header class="site-header">
         <nav class="navbar" aria-label="Main navigation">
-            <a class="brand" href="#converter" aria-label="Ratewise home">
-                <span class="brand-mark" aria-hidden="true">R</span>
-                <span>Ratewise</span>
+            <a class="brand" href="#trends" aria-label="RatesTrend home">
+                <img class="brand-logo" src="ratestrend-logo.svg" alt="RatesTrend">
             </a>
             <div class="nav-links">
-                <a class="nav-link is-active" href="#converter" aria-current="location">Converter</a>
-                <a class="nav-link" href="#trends">Trends</a>
+                <a class="nav-link is-active" href="#trends" aria-current="location">Trends</a>
+                <a class="nav-link nav-cta" href="#converter">Convert</a>
             </div>
         </nav>
     </header>
 
     <main>
+        <section class="page-section trends-section" id="trends" aria-labelledby="trends-title">
+            <div class="section-inner trends-inner">
+                <div class="trend-hero">
+                    <h1 id="trends-title">Track currency trends.<br>Understand tomorrow.</h1>
+                    <p>Live exchange rates, charts and trends for every major currency.</p>
+                    <div class="trend-hero-actions">
+                        <a class="hero-convert-button" href="#converter">Convert Currency <span aria-hidden="true">↓</span></a>
+                        <a class="hero-trends-button" href="#trend-chart-area">View Trends</a>
+                    </div>
+                </div>
+
+                <div class="trend-controls">
+                    <div class="trend-currency-controls">
+                        <div class="field">
+                            <label for="trend-base">Base currency</label>
+                            <div class="currency-picker" id="trend-base-picker">
+                                <div class="picker-control">
+                                    <span class="picker-flag-slot" aria-hidden="true"></span>
+                                    <input id="trend-base" type="text" placeholder="Loading currencies…"
+                                        role="combobox" aria-autocomplete="list" aria-expanded="false"
+                                        aria-controls="trend-base-options" autocomplete="off" disabled>
+                                </div>
+                                <ul class="picker-options" id="trend-base-options" role="listbox" hidden></ul>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="trend-quote">Currency to analyze</label>
+                            <div class="currency-picker" id="trend-quote-picker">
+                                <div class="picker-control">
+                                    <span class="picker-flag-slot" aria-hidden="true"></span>
+                                    <input id="trend-quote" type="text" placeholder="Loading currencies…"
+                                        role="combobox" aria-autocomplete="list" aria-expanded="false"
+                                        aria-controls="trend-quote-options" autocomplete="off" disabled>
+                                </div>
+                                <ul class="picker-options" id="trend-quote-options" role="listbox" hidden></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="range-control" role="group" aria-label="Trend date range">
+                        <button class="range-button" type="button" data-range="7D" aria-pressed="false">7D</button>
+                        <button class="range-button is-active" type="button" data-range="1M" aria-pressed="true">1M</button>
+                        <button class="range-button" type="button" data-range="3M" aria-pressed="false">3M</button>
+                        <button class="range-button" type="button" data-range="6M" aria-pressed="false">6M</button>
+                        <button class="range-button" type="button" data-range="1Y" aria-pressed="false">1Y</button>
+                    </div>
+
+                    <p class="trend-note">Trend data is available for major currencies only.</p>
+                </div>
+
+                <div class="trend-error" id="trend-error" role="alert" hidden>
+                    <p id="trend-error-message"></p>
+                    <button class="secondary-button" id="retry-trends" type="button">Retry</button>
+                </div>
+
+                <div class="stats-grid" aria-label="Exchange rate statistics">
+                    <article class="stat-card stat-card-primary">
+                        <p>Current rate</p>
+                        <strong class="stat-value" id="stat-current">—</strong>
+                        <span class="stat-caption" id="stat-current-caption">USD / EUR</span>
+                    </article>
+                    <article class="stat-card">
+                        <p>Change this period</p>
+                        <strong class="stat-value" id="stat-change">—</strong>
+                        <span class="stat-caption">since the period began</span>
+                    </article>
+                    <article class="stat-card">
+                        <p>Period high</p>
+                        <strong class="stat-value" id="stat-high">—</strong>
+                        <span class="stat-caption" id="stat-high-date">—</span>
+                    </article>
+                    <article class="stat-card">
+                        <p>Period low</p>
+                        <strong class="stat-value" id="stat-low">—</strong>
+                        <span class="stat-caption" id="stat-low-date">—</span>
+                    </article>
+                    <article class="stat-card">
+                        <p>Period average</p>
+                        <strong class="stat-value" id="stat-average">—</strong>
+                        <span class="stat-caption">daily average</span>
+                    </article>
+                </div>
+
+                <div class="trend-layout">
+                    <article class="panel chart-panel" id="trend-chart-area">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Exchange rate history</h3>
+                                <p id="chart-subtitle">Daily rates for the selected period</p>
+                            </div>
+                            <div class="chart-actions">
+                                <span class="chart-unit" id="chart-unit">—</span>
+                                <button class="chart-convert-button" id="convert-trend-pair" type="button">Convert this pair</button>
+                            </div>
+                        </div>
+                        <div class="chart-wrap">
+                            <div class="chart-skeleton" id="chart-skeleton" aria-hidden="true">
+                                <span></span><span></span><span></span><span></span><span></span>
+                            </div>
+                            <canvas id="trend-chart" aria-label="Historical exchange rate line chart"></canvas>
+                        </div>
+                        <p class="chart-footnote">Additional currency lines show percentage change from the period start.</p>
+                    </article>
+
+                    <article class="panel movers-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Top movers</h3>
+                                <p>Against <span id="movers-base">USD</span> this period</p>
+                            </div>
+                        </div>
+                        <div class="mover-group">
+                            <h4>Biggest gainers</h4>
+                            <div class="mover-list" id="gainers-list"></div>
+                        </div>
+                        <div class="mover-group">
+                            <h4>Biggest losers</h4>
+                            <div class="mover-list" id="losers-list"></div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="trend-compare">
+                    <div class="compare-controls">
+                        <div>
+                            <h3>Compare currencies</h3>
+                            <p>Optional · up to 3 additional currencies, shown as change from the start</p>
+                        </div>
+                        <button class="secondary-button" id="add-comparison" type="button">+ Add currency</button>
+                    </div>
+                    <div class="compare-tags" id="compare-tags"></div>
+                    <p class="compare-feedback" id="compare-feedback" aria-live="polite"></p>
+                    <div class="compare-picker-wrap" id="compare-picker-wrap" hidden>
+                        <div class="field">
+                            <label for="compare-picker">Add a currency</label>
+                            <div class="currency-picker" id="compare-picker-picker">
+                                <div class="picker-control">
+                                    <span class="picker-flag-slot" aria-hidden="true"></span>
+                                    <input id="compare-picker" type="text" placeholder="Search currencies"
+                                        role="combobox" aria-autocomplete="list" aria-expanded="false"
+                                        aria-controls="compare-picker-options" autocomplete="off">
+                                </div>
+                                <ul class="picker-options" id="compare-picker-options" role="listbox" hidden></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="trend-updated" id="trend-updated" aria-live="polite"></p>
+            </div>
+        </section>
+
         <section class="page-section converter-section" id="converter" aria-labelledby="converter-title">
             <div class="section-inner converter-inner">
                 <div class="hero-copy">
-                    <p class="eyebrow">CURRENCY, MADE CLEAR</p>
-                    <h1 id="converter-title">Make every currency count.</h1>
-                    <p class="hero-tagline">Convert with confidence, then see where the market is moving.</p>
+                    <p class="eyebrow">LIVE CURRENCY CONVERSION</p>
+                    <h2 id="converter-title">Convert with confidence.</h2>
+                    <p class="hero-tagline">Fast, clear exchange estimates for the currencies you use.</p>
                 </div>
 
                 <div class="converter-card">
@@ -83,155 +236,14 @@
                 </div>
             </div>
         </section>
-
-        <section class="page-section trends-section" id="trends" aria-labelledby="trends-title">
-            <div class="section-inner trends-inner">
-                <div class="section-heading">
-                    <p class="eyebrow">MARKET OVERVIEW</p>
-                    <h2 id="trends-title">Current rates &amp; trends</h2>
-                    <p>Explore how major currencies have moved against each other over time.</p>
-                </div>
-
-                <div class="trend-controls">
-                    <div class="trend-currency-controls">
-                        <div class="field">
-                            <label for="trend-base">Base currency</label>
-                            <div class="currency-picker" id="trend-base-picker">
-                                <div class="picker-control">
-                                    <span class="picker-flag-slot" aria-hidden="true"></span>
-                                    <input id="trend-base" type="text" placeholder="Loading currencies…"
-                                        role="combobox" aria-autocomplete="list" aria-expanded="false"
-                                        aria-controls="trend-base-options" autocomplete="off" disabled>
-                                </div>
-                                <ul class="picker-options" id="trend-base-options" role="listbox" hidden></ul>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label for="trend-quote">Compare against</label>
-                            <div class="currency-picker" id="trend-quote-picker">
-                                <div class="picker-control">
-                                    <span class="picker-flag-slot" aria-hidden="true"></span>
-                                    <input id="trend-quote" type="text" placeholder="Loading currencies…"
-                                        role="combobox" aria-autocomplete="list" aria-expanded="false"
-                                        aria-controls="trend-quote-options" autocomplete="off" disabled>
-                                </div>
-                                <ul class="picker-options" id="trend-quote-options" role="listbox" hidden></ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="range-control" role="group" aria-label="Trend date range">
-                        <button class="range-button" type="button" data-range="7D" aria-pressed="false">7D</button>
-                        <button class="range-button is-active" type="button" data-range="1M" aria-pressed="true">1M</button>
-                        <button class="range-button" type="button" data-range="3M" aria-pressed="false">3M</button>
-                        <button class="range-button" type="button" data-range="6M" aria-pressed="false">6M</button>
-                        <button class="range-button" type="button" data-range="1Y" aria-pressed="false">1Y</button>
-                    </div>
-
-                    <p class="trend-note">Trend data is available for major currencies only.</p>
-
-                    <div class="compare-controls">
-                        <div>
-                            <h3>Compare currencies</h3>
-                            <p>Optional · up to 3 additional currencies, shown as change from the start</p>
-                        </div>
-                        <button class="secondary-button" id="add-comparison" type="button">+ Add currency</button>
-                    </div>
-                    <div class="compare-tags" id="compare-tags"></div>
-                    <p class="compare-feedback" id="compare-feedback" aria-live="polite"></p>
-                    <div class="compare-picker-wrap" id="compare-picker-wrap" hidden>
-                        <div class="field">
-                            <label for="compare-picker">Add a currency</label>
-                            <div class="currency-picker" id="compare-picker-picker">
-                                <div class="picker-control">
-                                    <span class="picker-flag-slot" aria-hidden="true"></span>
-                                    <input id="compare-picker" type="text" placeholder="Search currencies"
-                                        role="combobox" aria-autocomplete="list" aria-expanded="false"
-                                        aria-controls="compare-picker-options" autocomplete="off">
-                                </div>
-                                <ul class="picker-options" id="compare-picker-options" role="listbox" hidden></ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="trend-error" id="trend-error" role="alert" hidden>
-                    <p id="trend-error-message"></p>
-                    <button class="secondary-button" id="retry-trends" type="button">Retry</button>
-                </div>
-
-                <div class="stats-grid" aria-label="Exchange rate statistics">
-                    <article class="stat-card stat-card-primary">
-                        <p>Current rate</p>
-                        <strong class="stat-value" id="stat-current">—</strong>
-                        <span class="stat-caption" id="stat-current-caption">USD / EUR</span>
-                    </article>
-                    <article class="stat-card">
-                        <p>Change this period</p>
-                        <strong class="stat-value" id="stat-change">—</strong>
-                        <span class="stat-caption">since the period began</span>
-                    </article>
-                    <article class="stat-card">
-                        <p>Period high</p>
-                        <strong class="stat-value" id="stat-high">—</strong>
-                        <span class="stat-caption" id="stat-high-date">—</span>
-                    </article>
-                    <article class="stat-card">
-                        <p>Period low</p>
-                        <strong class="stat-value" id="stat-low">—</strong>
-                        <span class="stat-caption" id="stat-low-date">—</span>
-                    </article>
-                    <article class="stat-card">
-                        <p>Period average</p>
-                        <strong class="stat-value" id="stat-average">—</strong>
-                        <span class="stat-caption">daily average</span>
-                    </article>
-                </div>
-
-                <div class="trend-layout">
-                    <article class="panel chart-panel">
-                        <div class="panel-heading">
-                            <div>
-                                <h3>Exchange rate history</h3>
-                                <p id="chart-subtitle">Daily rates for the selected period</p>
-                            </div>
-                            <span class="chart-unit" id="chart-unit">—</span>
-                        </div>
-                        <div class="chart-wrap">
-                            <div class="chart-skeleton" id="chart-skeleton" aria-hidden="true">
-                                <span></span><span></span><span></span><span></span><span></span>
-                            </div>
-                            <canvas id="trend-chart" aria-label="Historical exchange rate line chart"></canvas>
-                        </div>
-                        <p class="chart-footnote">Additional currency lines show percentage change from the period start.</p>
-                    </article>
-
-                    <article class="panel movers-panel">
-                        <div class="panel-heading">
-                            <div>
-                                <h3>Top movers</h3>
-                                <p>Against <span id="movers-base">USD</span> this period</p>
-                            </div>
-                        </div>
-                        <div class="mover-group">
-                            <h4>Biggest gainers</h4>
-                            <div class="mover-list" id="gainers-list"></div>
-                        </div>
-                        <div class="mover-group">
-                            <h4>Biggest losers</h4>
-                            <div class="mover-list" id="losers-list"></div>
-                        </div>
-                    </article>
-                </div>
-
-                <p class="trend-updated" id="trend-updated" aria-live="polite"></p>
-            </div>
-        </section>
     </main>
+
+    <a class="floating-convert" id="floating-convert" href="#converter">Convert</a>
 
     <footer class="site-footer">
         <div class="footer-inner">
-            <p>Exchange data: <a href="https://open.er-api.com" target="_blank" rel="noreferrer">open.er-api.com</a>
+            <p><strong class="footer-brand">RatesTrend</strong> <span>© 2026</span></p>
+            <p>Data sources: <a href="https://open.er-api.com" target="_blank" rel="noreferrer">open.er-api.com</a>
                 and <a href="https://www.frankfurter.dev" target="_blank" rel="noreferrer">Frankfurter</a>.</p>
             <p id="footer-updated">Last updated: waiting for exchange data…</p>
         </div>
