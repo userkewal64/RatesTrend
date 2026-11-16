@@ -70,7 +70,6 @@
                         <button class="range-button" type="button" data-range="1Y" aria-pressed="false">1Y</button>
                     </div>
 
-                    <p class="trend-note">Trend data is available for major currencies only.</p>
                 </div>
 
                 <div class="trend-error" id="trend-error" role="alert" hidden>
@@ -124,7 +123,8 @@
                             </div>
                             <canvas id="trend-chart" aria-label="Historical exchange rate line chart"></canvas>
                         </div>
-                        <p class="chart-footnote">Additional currency lines show percentage change from the period start.</p>
+                        <p class="chart-footnote">Rates are daily mid-market rates from public sources and are for information only.</p>
+                        <p class="chart-footnote" id="chart-pair-note" hidden>NPR is pegged to INR, so this line stays almost flat.</p>
                     </article>
 
                     <article class="panel movers-panel">
@@ -234,6 +234,7 @@
                     </div>
                     <div class="popular-rate-list" id="popular-rates" aria-label="Popular USD exchange rates"></div>
                 </div>
+                <p class="converter-disclaimer">Rates are indicative and for information only. Crypto prices are volatile.</p>
             </div>
         </section>
     </main>
@@ -243,9 +244,11 @@
     <footer class="site-footer">
         <div class="footer-inner">
             <p><strong class="footer-brand">RatesTrend</strong> <span>© 2026</span></p>
-            <p>Data sources: <a href="https://open.er-api.com" target="_blank" rel="noreferrer">open.er-api.com</a>
-                and <a href="https://www.frankfurter.dev" target="_blank" rel="noreferrer">Frankfurter</a>.</p>
+            <p>Data sources: <a href="https://open.er-api.com" target="_blank" rel="noreferrer">open.er-api.com</a>,
+                <a href="https://www.frankfurter.dev" target="_blank" rel="noreferrer">Frankfurter</a>, and
+                <a href="https://github.com/fawazahmed0/currency-api" target="_blank" rel="noreferrer">currency-api</a>.</p>
             <p id="footer-updated">Last updated: waiting for exchange data…</p>
+            <p class="footer-currency-note">Currency list based on ISO 4217. Rates are indicative market rates from public sources and are for information only.</p>
         </div>
     </footer>
 

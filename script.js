@@ -1,3 +1,167 @@
+const CURRENCIES = [
+  { code: "AED", name: "UAE Dirham", country: "United Arab Emirates", flag: "ae", group: "world" },
+  { code: "AFN", name: "Afghan Afghani", country: "Afghanistan", flag: "af", group: "world" },
+  { code: "ALL", name: "Albanian Lek", country: "Albania", flag: "al", group: "world" },
+  { code: "AMD", name: "Armenian Dram", country: "Armenia", flag: "am", group: "world" },
+  { code: "AOA", name: "Angolan Kwanza", country: "Angola", flag: "ao", region: "Africa", group: "world" },
+  { code: "ARS", name: "Argentine Peso", country: "Argentina", flag: "ar", group: "world" },
+  { code: "AUD", name: "Australian Dollar", country: "Australia and Pacific territories", flag: "au", group: "world" },
+  { code: "AWG", name: "Aruban Florin", country: "Aruba", flag: "aw", group: "world" },
+  { code: "AZN", name: "Azerbaijani Manat", country: "Azerbaijan", flag: "az", group: "world" },
+  { code: "BAM", name: "Convertible Mark", country: "Bosnia and Herzegovina", flag: "ba", group: "world" },
+  { code: "BBD", name: "Barbadian Dollar", country: "Barbados", flag: "bb", group: "world" },
+  { code: "BDT", name: "Bangladeshi Taka", country: "Bangladesh", flag: "bd", group: "world" },
+  { code: "BHD", name: "Bahraini Dinar", country: "Bahrain", flag: "bh", group: "world" },
+  { code: "BIF", name: "Burundian Franc", country: "Burundi", flag: "bi", region: "Africa", group: "world" },
+  { code: "BMD", name: "Bermudian Dollar", country: "Bermuda", flag: "bm", group: "world" },
+  { code: "BND", name: "Brunei Dollar", country: "Brunei", flag: "bn", group: "world" },
+  { code: "BOB", name: "Bolivian Boliviano", country: "Bolivia", flag: "bo", group: "world" },
+  { code: "BRL", name: "Brazilian Real", country: "Brazil", flag: "br", group: "world" },
+  { code: "BSD", name: "Bahamian Dollar", country: "Bahamas", flag: "bs", group: "world" },
+  { code: "BTN", name: "Bhutanese Ngultrum", country: "Bhutan", flag: "bt", group: "world" },
+  { code: "BWP", name: "Botswana Pula", country: "Botswana", flag: "bw", region: "Africa", group: "world" },
+  { code: "BYN", name: "Belarusian Ruble", country: "Belarus", flag: "by", group: "world" },
+  { code: "BZD", name: "Belize Dollar", country: "Belize", flag: "bz", group: "world" },
+  { code: "CAD", name: "Canadian Dollar", country: "Canada", flag: "ca", group: "world" },
+  { code: "CDF", name: "Congolese Franc", country: "Democratic Republic of the Congo", flag: "cd", region: "Africa", group: "world" },
+  { code: "CHF", name: "Swiss Franc", country: "Switzerland and Liechtenstein", flag: "ch", group: "world" },
+  { code: "CLP", name: "Chilean Peso", country: "Chile", flag: "cl", group: "world" },
+  { code: "CNY", name: "Chinese Yuan", country: "China", flag: "cn", group: "world" },
+  { code: "COP", name: "Colombian Peso", country: "Colombia", flag: "co", group: "world" },
+  { code: "CRC", name: "Costa Rican Colon", country: "Costa Rica", flag: "cr", group: "world" },
+  { code: "CUP", name: "Cuban Peso", country: "Cuba", flag: "cu", group: "world" },
+  { code: "CVE", name: "Cape Verdean Escudo", country: "Cabo Verde", flag: "cv", region: "Africa", group: "world" },
+  { code: "CZK", name: "Czech Koruna", country: "Czechia", flag: "cz", group: "world" },
+  { code: "DJF", name: "Djiboutian Franc", country: "Djibouti", flag: "dj", region: "Africa", group: "world" },
+  { code: "DKK", name: "Danish Krone", country: "Denmark, Faroe Islands and Greenland", flag: "dk", group: "world" },
+  { code: "DOP", name: "Dominican Peso", country: "Dominican Republic", flag: "do", group: "world" },
+  { code: "DZD", name: "Algerian Dinar", country: "Algeria", flag: "dz", region: "Africa", group: "world" },
+  { code: "EGP", name: "Egyptian Pound", country: "Egypt", flag: "eg", region: "Africa", group: "world" },
+  { code: "ERN", name: "Eritrean Nakfa", country: "Eritrea", flag: "er", region: "Africa", group: "world" },
+  { code: "ETB", name: "Ethiopian Birr", country: "Ethiopia", flag: "et", region: "Africa", group: "world" },
+  { code: "EUR", name: "Euro", country: "Eurozone (Europe)", flag: "eu", group: "world" },
+  { code: "FJD", name: "Fijian Dollar", country: "Fiji", flag: "fj", group: "world" },
+  { code: "FKP", name: "Falkland Islands Pound", country: "Falkland Islands", flag: "fk", group: "world" },
+  { code: "GBP", name: "British Pound", country: "United Kingdom and Crown Dependencies", flag: "gb", group: "world" },
+  { code: "GEL", name: "Georgian Lari", country: "Georgia", flag: "ge", group: "world" },
+  { code: "GHS", name: "Ghanaian Cedi", country: "Ghana", flag: "gh", region: "Africa", group: "world" },
+  { code: "GIP", name: "Gibraltar Pound", country: "Gibraltar", flag: "gi", group: "world" },
+  { code: "GMD", name: "Gambian Dalasi", country: "The Gambia", flag: "gm", region: "Africa", group: "world" },
+  { code: "GNF", name: "Guinean Franc", country: "Guinea", flag: "gn", region: "Africa", group: "world" },
+  { code: "GTQ", name: "Guatemalan Quetzal", country: "Guatemala", flag: "gt", group: "world" },
+  { code: "GYD", name: "Guyanese Dollar", country: "Guyana", flag: "gy", group: "world" },
+  { code: "HKD", name: "Hong Kong Dollar", country: "Hong Kong", flag: "hk", group: "world" },
+  { code: "HNL", name: "Honduran Lempira", country: "Honduras", flag: "hn", group: "world" },
+  { code: "HTG", name: "Haitian Gourde", country: "Haiti", flag: "ht", group: "world" },
+  { code: "HUF", name: "Hungarian Forint", country: "Hungary", flag: "hu", group: "world" },
+  { code: "IDR", name: "Indonesian Rupiah", country: "Indonesia", flag: "id", group: "world" },
+  { code: "ILS", name: "Israeli New Shekel", country: "Israel", flag: "il", group: "world" },
+  { code: "INR", name: "Indian Rupee", country: "India", flag: "in", group: "world" },
+  { code: "IQD", name: "Iraqi Dinar", country: "Iraq", flag: "iq", group: "world" },
+  { code: "IRR", name: "Iranian Rial", country: "Iran", flag: "ir", group: "world" },
+  { code: "ISK", name: "Icelandic Krona", country: "Iceland", flag: "is", group: "world" },
+  { code: "JMD", name: "Jamaican Dollar", country: "Jamaica", flag: "jm", group: "world" },
+  { code: "JOD", name: "Jordanian Dinar", country: "Jordan", flag: "jo", group: "world" },
+  { code: "JPY", name: "Japanese Yen", country: "Japan", flag: "jp", group: "world" },
+  { code: "KES", name: "Kenyan Shilling", country: "Kenya", flag: "ke", region: "Africa", group: "world" },
+  { code: "KGS", name: "Kyrgyzstani Som", country: "Kyrgyzstan", flag: "kg", group: "world" },
+  { code: "KHR", name: "Cambodian Riel", country: "Cambodia", flag: "kh", group: "world" },
+  { code: "KMF", name: "Comorian Franc", country: "Comoros", flag: "km", region: "Africa", group: "world" },
+  { code: "KPW", name: "North Korean Won", country: "North Korea", flag: "kp", group: "world" },
+  { code: "KRW", name: "South Korean Won", country: "South Korea", flag: "kr", group: "world" },
+  { code: "KWD", name: "Kuwaiti Dinar", country: "Kuwait", flag: "kw", group: "world" },
+  { code: "KYD", name: "Cayman Islands Dollar", country: "Cayman Islands", flag: "ky", group: "world" },
+  { code: "KZT", name: "Kazakhstani Tenge", country: "Kazakhstan", flag: "kz", group: "world" },
+  { code: "LAK", name: "Lao Kip", country: "Laos", flag: "la", group: "world" },
+  { code: "LBP", name: "Lebanese Pound", country: "Lebanon", flag: "lb", group: "world" },
+  { code: "LKR", name: "Sri Lankan Rupee", country: "Sri Lanka", flag: "lk", group: "world" },
+  { code: "LRD", name: "Liberian Dollar", country: "Liberia", flag: "lr", group: "world" },
+  { code: "LSL", name: "Lesotho Loti", country: "Lesotho", flag: "ls", region: "Africa", group: "world" },
+  { code: "LYD", name: "Libyan Dinar", country: "Libya", flag: "ly", region: "Africa", group: "world" },
+  { code: "MAD", name: "Moroccan Dirham", country: "Morocco and Western Sahara", flag: "ma", region: "Africa", group: "world" },
+  { code: "MDL", name: "Moldovan Leu", country: "Moldova", flag: "md", group: "world" },
+  { code: "MGA", name: "Malagasy Ariary", country: "Madagascar", flag: "mg", region: "Africa", group: "world" },
+  { code: "MKD", name: "Macedonian Denar", country: "North Macedonia", flag: "mk", group: "world" },
+  { code: "MMK", name: "Myanmar Kyat", country: "Myanmar", flag: "mm", group: "world" },
+  { code: "MNT", name: "Mongolian Tugrik", country: "Mongolia", flag: "mn", group: "world" },
+  { code: "MOP", name: "Macanese Pataca", country: "Macau", flag: "mo", group: "world" },
+  { code: "MRU", name: "Mauritanian Ouguiya", country: "Mauritania", flag: "mr", region: "Africa", group: "world" },
+  { code: "MUR", name: "Mauritian Rupee", country: "Mauritius", flag: "mu", region: "Africa", group: "world" },
+  { code: "MVR", name: "Maldivian Rufiyaa", country: "Maldives", flag: "mv", group: "world" },
+  { code: "MWK", name: "Malawian Kwacha", country: "Malawi", flag: "mw", region: "Africa", group: "world" },
+  { code: "MXN", name: "Mexican Peso", country: "Mexico", flag: "mx", group: "world" },
+  { code: "MYR", name: "Malaysian Ringgit", country: "Malaysia", flag: "my", group: "world" },
+  { code: "MZN", name: "Mozambican Metical", country: "Mozambique", flag: "mz", region: "Africa", group: "world" },
+  { code: "NAD", name: "Namibian Dollar", country: "Namibia", flag: "na", region: "Africa", group: "world" },
+  { code: "NGN", name: "Nigerian Naira", country: "Nigeria", flag: "ng", region: "Africa", group: "world" },
+  { code: "NIO", name: "Nicaraguan Cordoba", country: "Nicaragua", flag: "ni", group: "world" },
+  { code: "NOK", name: "Norwegian Krone", country: "Norway", flag: "no", group: "world" },
+  { code: "NPR", name: "Nepalese Rupee", country: "Nepal", flag: "np", group: "world" },
+  { code: "NZD", name: "New Zealand Dollar", country: "New Zealand and associated territories", flag: "nz", group: "world" },
+  { code: "OMR", name: "Omani Rial", country: "Oman", flag: "om", group: "world" },
+  { code: "PAB", name: "Panamanian Balboa", country: "Panama", flag: "pa", group: "world" },
+  { code: "PEN", name: "Peruvian Sol", country: "Peru", flag: "pe", group: "world" },
+  { code: "PGK", name: "Papua New Guinean Kina", country: "Papua New Guinea", flag: "pg", group: "world" },
+  { code: "PHP", name: "Philippine Peso", country: "Philippines", flag: "ph", group: "world" },
+  { code: "PKR", name: "Pakistani Rupee", country: "Pakistan", flag: "pk", group: "world" },
+  { code: "PLN", name: "Polish Zloty", country: "Poland", flag: "pl", group: "world" },
+  { code: "PYG", name: "Paraguayan Guarani", country: "Paraguay", flag: "py", group: "world" },
+  { code: "QAR", name: "Qatari Riyal", country: "Qatar", flag: "qa", group: "world" },
+  { code: "RON", name: "Romanian Leu", country: "Romania", flag: "ro", group: "world" },
+  { code: "RSD", name: "Serbian Dinar", country: "Serbia", flag: "rs", group: "world" },
+  { code: "RUB", name: "Russian Ruble", country: "Russia", flag: "ru", group: "world" },
+  { code: "RWF", name: "Rwandan Franc", country: "Rwanda", flag: "rw", region: "Africa", group: "world" },
+  { code: "SAR", name: "Saudi Riyal", country: "Saudi Arabia", flag: "sa", group: "world" },
+  { code: "SBD", name: "Solomon Islands Dollar", country: "Solomon Islands", flag: "sb", group: "world" },
+  { code: "SCR", name: "Seychellois Rupee", country: "Seychelles", flag: "sc", group: "world" },
+  { code: "SDG", name: "Sudanese Pound", country: "Sudan", flag: "sd", region: "Africa", group: "world" },
+  { code: "SEK", name: "Swedish Krona", country: "Sweden", flag: "se", group: "world" },
+  { code: "SGD", name: "Singapore Dollar", country: "Singapore and Brunei", flag: "sg", group: "world" },
+  { code: "SHP", name: "Saint Helena Pound", country: "Saint Helena", flag: "sh", group: "world" },
+  { code: "SLE", name: "Sierra Leonean Leone", country: "Sierra Leone", flag: "sl", region: "Africa", group: "world" },
+  { code: "SOS", name: "Somali Shilling", country: "Somalia", flag: "so", region: "Africa", group: "world" },
+  { code: "SRD", name: "Surinamese Dollar", country: "Suriname", flag: "sr", group: "world" },
+  { code: "SSP", name: "South Sudanese Pound", country: "South Sudan", flag: "ss", region: "Africa", group: "world" },
+  { code: "STN", name: "Sao Tome and Principe Dobra", country: "Sao Tome and Principe", flag: "st", region: "Africa", group: "world" },
+  { code: "SYP", name: "Syrian Pound", country: "Syria", flag: "sy", group: "world" },
+  { code: "SZL", name: "Swazi Lilangeni", country: "Eswatini", flag: "sz", region: "Africa", group: "world" },
+  { code: "THB", name: "Thai Baht", country: "Thailand", flag: "th", group: "world" },
+  { code: "TJS", name: "Tajikistani Somoni", country: "Tajikistan", flag: "tj", group: "world" },
+  { code: "TMT", name: "Turkmenistan Manat", country: "Turkmenistan", flag: "tm", group: "world" },
+  { code: "TND", name: "Tunisian Dinar", country: "Tunisia", flag: "tn", region: "Africa", group: "world" },
+  { code: "TOP", name: "Tongan Paanga", country: "Tonga", flag: "to", group: "world" },
+  { code: "TRY", name: "Turkish Lira", country: "Turkey", flag: "tr", group: "world" },
+  { code: "TTD", name: "Trinidad and Tobago Dollar", country: "Trinidad and Tobago", flag: "tt", group: "world" },
+  { code: "TWD", name: "New Taiwan Dollar", country: "Taiwan", flag: "tw", group: "world" },
+  { code: "TZS", name: "Tanzanian Shilling", country: "Tanzania", flag: "tz", region: "Africa", group: "world" },
+  { code: "UAH", name: "Ukrainian Hryvnia", country: "Ukraine", flag: "ua", group: "world" },
+  { code: "UGX", name: "Ugandan Shilling", country: "Uganda", flag: "ug", region: "Africa", group: "world" },
+  { code: "USD", name: "United States Dollar", country: "United States", flag: "us", group: "world" },
+  { code: "UYU", name: "Uruguayan Peso", country: "Uruguay", flag: "uy", group: "world" },
+  { code: "UZS", name: "Uzbekistani Som", country: "Uzbekistan", flag: "uz", group: "world" },
+  { code: "VES", name: "Venezuelan Bolivar", country: "Venezuela", flag: "ve", group: "world" },
+  { code: "VND", name: "Vietnamese Dong", country: "Vietnam", flag: "vn", group: "world" },
+  { code: "VUV", name: "Vanuatu Vatu", country: "Vanuatu", flag: "vu", group: "world" },
+  { code: "WST", name: "Samoan Tala", country: "Samoa", flag: "ws", group: "world" },
+  { code: "XAF", name: "Central African CFA Franc", country: "Central Africa (CFA zone)", flag: "cm", region: "Africa", group: "world" },
+  { code: "XCD", name: "East Caribbean Dollar", country: "Eastern Caribbean", flag: "ag", group: "world" },
+  { code: "XCG", name: "Caribbean Guilder", country: "Curaçao and Sint Maarten", flag: "cw", group: "world" },
+  { code: "XOF", name: "West African CFA Franc", country: "West Africa (CFA zone)", flag: "sn", region: "Africa", group: "world" },
+  { code: "XPF", name: "CFP Franc", country: "French Pacific territories", flag: "pf", group: "world" },
+  { code: "YER", name: "Yemeni Rial", country: "Yemen", flag: "ye", group: "world" },
+  { code: "ZAR", name: "South African Rand", country: "South Africa", flag: "za", region: "Africa", group: "world" },
+  { code: "ZMW", name: "Zambian Kwacha", country: "Zambia", flag: "zm", region: "Africa", group: "world" },
+  { code: "ZWG", name: "Zimbabwe Gold", country: "Zimbabwe", flag: "zw", region: "Africa", group: "world" },
+  { code: "BTC", name: "Bitcoin", country: "Global", flag: "", group: "crypto" },
+  { code: "ETH", name: "Ethereum", country: "Global", flag: "", group: "crypto" },
+  { code: "USDT", name: "Tether", country: "Global", flag: "", group: "crypto" },
+  { code: "BNB", name: "BNB", country: "Global", flag: "", group: "crypto" },
+  { code: "XRP", name: "XRP", country: "Global", flag: "", group: "crypto" }
+];
+const CRYPTO_CODES = new Set(CURRENCIES.filter((currency) => currency.group === "crypto").map((currency) => currency.code));
+const currencyApiLatestCache = new Map();
+const pendingCurrencyApiLatestRates = new Map();
+
 // Navigation
 const navLinks = Array.from(document.querySelectorAll(".nav-link"));
 const pageSections = Array.from(document.querySelectorAll(".page-section"));
@@ -33,39 +197,6 @@ if ("IntersectionObserver" in window) {
 }
 
 // Pickers
-const currencyCountries = {
-  AED: "ae", AFN: "af", ALL: "al", AMD: "am", ANG: "cw", AOA: "ao",
-  ARS: "ar", AUD: "au", AWG: "aw", AZN: "az", BAM: "ba", BBD: "bb",
-  BDT: "bd", BGN: "bg", BHD: "bh", BIF: "bi", BMD: "bm", BND: "bn",
-  BOB: "bo", BRL: "br", BSD: "bs", BTN: "bt", BWP: "bw", BYN: "by",
-  BZD: "bz", CAD: "ca", CDF: "cd", CHF: "ch", CLF: "cl", CLP: "cl",
-  CNH: "cn", CNY: "cn", COP: "co", CRC: "cr", CUP: "cu", CVE: "cv",
-  CZK: "cz", DJF: "dj", DKK: "dk", DOP: "do", DZD: "dz", EGP: "eg",
-  ERN: "er", ETB: "et", EUR: "eu", FJD: "fj", FKP: "fk", FOK: "fo",
-  GBP: "gb", GEL: "ge", GGP: "gg", GHS: "gh", GIP: "gi", GMD: "gm",
-  GNF: "gn", GTQ: "gt", GYD: "gy", HKD: "hk", HNL: "hn", HRK: "hr",
-  HTG: "ht", HUF: "hu", IDR: "id", ILS: "il", IMP: "im", INR: "in",
-  IQD: "iq", IRR: "ir", ISK: "is", JEP: "je", JMD: "jm", JOD: "jo",
-  JPY: "jp", KES: "ke", KGS: "kg", KHR: "kh", KID: "ki", KMF: "km",
-  KRW: "kr", KWD: "kw", KYD: "ky", KZT: "kz", LAK: "la", LBP: "lb",
-  LKR: "lk", LRD: "lr", LSL: "ls", LYD: "ly", MAD: "ma", MDL: "md",
-  MGA: "mg", MKD: "mk", MMK: "mm", MNT: "mn", MOP: "mo", MRU: "mr",
-  MUR: "mu", MVR: "mv", MWK: "mw", MXN: "mx", MYR: "my", MZN: "mz",
-  NAD: "na", NGN: "ng", NIO: "ni", NOK: "no", NPR: "np", NZD: "nz",
-  OMR: "om", PAB: "pa", PEN: "pe", PGK: "pg", PHP: "ph", PKR: "pk",
-  PLN: "pl", PYG: "py", QAR: "qa", RON: "ro", RSD: "rs", RUB: "ru",
-  RWF: "rw", SAR: "sa", SBD: "sb", SCR: "sc", SDG: "sd", SEK: "se",
-  SGD: "sg", SHP: "sh", SLE: "sl", SLL: "sl", SOS: "so", SRD: "sr",
-  SSP: "ss", STN: "st", SYP: "sy", SZL: "sz", THB: "th", TJS: "tj",
-  TMT: "tm", TND: "tn", TOP: "to", TRY: "tr", TTD: "tt", TVD: "tv",
-  TWD: "tw", TZS: "tz", UAH: "ua", UGX: "ug", USD: "us", UYU: "uy",
-  UZS: "uz", VES: "ve", VND: "vn", VUV: "vu", WST: "ws", XAF: "cm",
-  XCD: "dm", XCG: "cw", XDR: null, XOF: "sn", XPF: "pf", YER: "ye",
-  ZAR: "za", ZMW: "zm", ZWG: "zw", ZWL: "zw"
-};
-const currencyNames = new Intl.DisplayNames(["en"], { type: "currency" });
-const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
-
 function createPicker(id, onSelect) {
   const root = document.getElementById(`${id}-picker`);
   const input = document.getElementById(id);
@@ -126,23 +257,6 @@ const allPickers = [
   comparisonPicker
 ];
 
-function buildCurrencyItem(code, displayName) {
-  const mappedCountry = currencyCountries[code] || null;
-  const countryName = mappedCountry
-    ? regionNames.of(mappedCountry.toUpperCase())
-    : "";
-  const intlName = currencyNames.of(code);
-  const name = displayName || (intlName && intlName !== code ? intlName : code);
-
-  return {
-    code,
-    name,
-    countryCode: mappedCountry,
-    countryName,
-    searchText: `${code} ${name} ${countryName}`.toLocaleLowerCase()
-  };
-}
-
 function currencyLabel(currency) {
   return `${currency.code} - ${currency.name}`;
 }
@@ -155,13 +269,21 @@ function createFallbackFlag() {
   return fallback;
 }
 
-function createFlag(countryCode, countryName) {
-  if (!countryCode) return createFallbackFlag();
+function createFlag(currency) {
+  if (currency.group === "crypto") {
+    const badge = document.createElement("span");
+    badge.className = `crypto-badge crypto-badge-${currency.code.toLowerCase()}`;
+    badge.textContent = ({ BTC: "₿", ETH: "Ξ", USDT: "₮" })[currency.code] || currency.code.slice(0, 3);
+    badge.setAttribute("role", "img");
+    badge.setAttribute("aria-label", currency.name);
+    return badge;
+  }
+  if (!currency.flag) return createFallbackFlag();
 
   const flag = document.createElement("img");
   flag.className = "currency-flag";
-  flag.src = `https://flagcdn.com/w40/${countryCode}.png`;
-  flag.alt = countryName ? `Flag of ${countryName}` : "Currency flag";
+  flag.src = `https://flagcdn.com/w40/${currency.flag}.png`;
+  flag.alt = `Flag of ${currency.country}`;
   flag.width = 24;
   flag.height = 18;
   flag.loading = "lazy";
@@ -170,7 +292,10 @@ function createFlag(countryCode, countryName) {
 }
 
 function setPickerItems(picker, items, selectedCode) {
-  picker.items = items;
+  picker.items = items.slice().sort((a, b) => {
+    if (a.group !== b.group) return a.group === "world" ? -1 : 1;
+    return a.name.localeCompare(b.name);
+  });
   picker.selectedCode = selectedCode || "";
   picker.previousCode = picker.selectedCode;
   picker.input.disabled = false;
@@ -183,7 +308,7 @@ function updatePickerDisplay(picker) {
   picker.input.value = currency ? currencyLabel(currency) : "";
   picker.flagSlot.replaceChildren();
   if (currency) {
-    picker.flagSlot.appendChild(createFlag(currency.countryCode, currency.countryName));
+    picker.flagSlot.appendChild(createFlag(currency));
   }
 }
 
@@ -201,7 +326,8 @@ function closePicker(picker, restoreSelection) {
 function renderPickerOptions(picker, query) {
   const normalizedQuery = query.trim().toLocaleLowerCase();
   const matches = picker.items.filter((currency) =>
-    currency.searchText.includes(normalizedQuery)
+    `${currency.code} ${currency.name} ${currency.country} ${currency.region || ""}`
+      .toLocaleLowerCase().includes(normalizedQuery)
   );
   picker.list.replaceChildren();
   picker.activeIndex = -1;
@@ -217,20 +343,38 @@ function renderPickerOptions(picker, query) {
     return;
   }
 
-  matches.forEach((currency) => {
-    const option = document.createElement("li");
-    option.className = "picker-option";
-    option.id = `${picker.id}-option-${currency.code}`;
-    option.setAttribute("role", "option");
-    option.setAttribute("aria-selected", String(currency.code === picker.selectedCode));
-    option.appendChild(createFlag(currency.countryCode, currency.countryName));
+  ["world", "crypto"].forEach((group) => {
+    const sectionCurrencies = matches.filter((currency) => currency.group === group);
+    if (!sectionCurrencies.length) return;
 
-    const label = document.createElement("span");
-    label.textContent = currencyLabel(currency);
-    option.appendChild(label);
-    option.addEventListener("mousedown", (event) => event.preventDefault());
-    option.addEventListener("click", () => selectCurrency(picker, currency.code));
-    picker.list.appendChild(option);
+    const heading = document.createElement("li");
+    heading.className = "picker-group";
+    heading.setAttribute("role", "presentation");
+    heading.textContent = group === "world" ? "World currencies" : "Crypto";
+    picker.list.appendChild(heading);
+
+    sectionCurrencies.forEach((currency) => {
+      const option = document.createElement("li");
+      option.className = "picker-option";
+      option.id = `${picker.id}-option-${currency.code}`;
+      option.setAttribute("role", "option");
+      option.setAttribute("aria-selected", String(currency.code === picker.selectedCode));
+      option.appendChild(createFlag(currency));
+
+      const copy = document.createElement("span");
+      copy.className = "picker-option-copy";
+      const label = document.createElement("span");
+      label.className = "picker-option-label";
+      label.textContent = currencyLabel(currency);
+      const country = document.createElement("small");
+      country.className = "picker-option-country";
+      country.textContent = currency.country;
+      copy.append(label, country);
+      option.appendChild(copy);
+      option.addEventListener("mousedown", (event) => event.preventDefault());
+      option.addEventListener("click", () => selectCurrency(picker, currency.code));
+      picker.list.appendChild(option);
+    });
   });
 }
 
@@ -316,8 +460,11 @@ const trendCanvas = document.getElementById("trend-chart");
 const trendUpdatedEl = document.getElementById("trend-updated");
 const comparisonCodes = [];
 const compareColors = ["#0ea5a4", "#f59e0b", "#ec4899"];
-const trendCache = new Map();
-const pendingTrendRequests = new Map();
+const trendSeriesCache = new Map();
+const pendingTrendSeries = new Map();
+const currencyApiSnapshotCache = new Map();
+const pendingCurrencyApiSnapshots = new Map();
+const frankfurterCurrencies = new Set();
 let activeRange = "1M";
 let trendRequestId = 0;
 let trendCurrencies = [];
@@ -352,17 +499,43 @@ document.getElementById("retry-trends").addEventListener("click", () => {
 
 function getDateRange(range) {
   const end = new Date();
-  const start = new Date(end.getTime());
-  if (range === "7D") start.setUTCDate(start.getUTCDate() - 7);
-  else if (range === "1M") start.setUTCMonth(start.getUTCMonth() - 1);
-  else if (range === "3M") start.setUTCMonth(start.getUTCMonth() - 3);
-  else if (range === "6M") start.setUTCMonth(start.getUTCMonth() - 6);
-  else start.setUTCFullYear(start.getUTCFullYear() - 1);
+  const start = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate()));
+  const endText = end.toISOString().slice(0, 10);
+  if (range === "7D") {
+    start.setUTCDate(start.getUTCDate() - 6);
+  } else if (range === "1Y") {
+    const day = start.getUTCDate();
+    start.setUTCDate(1);
+    start.setUTCFullYear(start.getUTCFullYear() - 1);
+    const lastDay = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 0)).getUTCDate();
+    start.setUTCDate(Math.min(day, lastDay));
+  } else {
+    const months = range === "1M" ? 1 : range === "3M" ? 3 : 6;
+    const day = start.getUTCDate();
+    start.setUTCDate(1);
+    start.setUTCMonth(start.getUTCMonth() - months);
+    const lastDay = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 0)).getUTCDate();
+    start.setUTCDate(Math.min(day, lastDay));
+  }
 
   return {
     start: start.toISOString().slice(0, 10),
-    end: end.toISOString().slice(0, 10)
+    end: endText
   };
+}
+
+function getSampleDates(start, end, range) {
+  const intervalDays = range === "7D" || range === "1M" ? 1 : range === "3M" ? 3 : 7;
+  const dates = [];
+  const cursor = new Date(`${start}T00:00:00Z`);
+  const endDate = new Date(`${end}T00:00:00Z`);
+
+  while (cursor < endDate) {
+    dates.push(cursor.toISOString().slice(0, 10));
+    cursor.setUTCDate(cursor.getUTCDate() + intervalDays);
+  }
+  if (dates[dates.length - 1] !== end) dates.push(end);
+  return dates;
 }
 
 function setTrendLoading(isLoading) {
@@ -419,11 +592,32 @@ async function initializeTrends() {
   setTrendLoading(true);
   clearTrendError();
   try {
-    const response = await fetch("https://api.frankfurter.dev/v1/currencies");
-    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-    const data = await response.json();
-    trendCurrencies = Object.entries(data)
-      .map(([code, name]) => buildCurrencyItem(code, name))
+    const currencyApiRatesPromise = fetchLatestCurrencyRates("USD").catch((error) => {
+      console.error("Could not load currency-api availability data:", error);
+      return {};
+    });
+    const frankfurterPromise = fetch("https://api.frankfurter.dev/v1/currencies")
+      .then((response) => {
+        if (!response.ok) throw new Error(`Currency list HTTP error ${response.status}`);
+        return response.json();
+      })
+      .then((data) => new Set(Object.keys(data).map((code) => code.toUpperCase())))
+      .catch((error) => {
+        console.error("Could not load Frankfurter currencies; using currency-api for all pairs:", error);
+        return new Set();
+      });
+    const [currencyApiRates, supportedCurrencies] = await Promise.all([
+      currencyApiRatesPromise,
+      frankfurterPromise
+    ]);
+
+    frankfurterCurrencies.clear();
+    supportedCurrencies.forEach((code) => frankfurterCurrencies.add(code));
+    const currencyApiCurrencies = new Set(Object.keys(currencyApiRates).map((code) => code.toUpperCase()));
+    trendCurrencies = CURRENCIES
+      .filter((currency) => currency.group === "crypto"
+        ? currencyApiCurrencies.has(currency.code)
+        : currencyApiCurrencies.has(currency.code) || frankfurterCurrencies.has(currency.code))
       .sort((a, b) => a.code.localeCompare(b.code));
     if (!trendCurrencies.length) throw new Error("No supported currencies were returned.");
 
@@ -439,8 +633,45 @@ async function initializeTrends() {
     setPickerItems(comparisonPicker, trendCurrencies, "");
     loadTrends();
   } catch (error) {
-    console.error("Could not load Frankfurter currencies:", error);
+    console.error("Could not load currency options:", error);
     showTrendError("Currency trend options could not be loaded. Check your connection and try again.");
+  }
+}
+
+async function fetchLatestCurrencyRates(base) {
+  const lowerBase = base.toLowerCase();
+  if (currencyApiLatestCache.has(lowerBase)) return currencyApiLatestCache.get(lowerBase);
+  if (pendingCurrencyApiLatestRates.has(lowerBase)) return pendingCurrencyApiLatestRates.get(lowerBase);
+
+  const request = (async () => {
+    const urls = [
+      `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${lowerBase}.json`,
+      `https://latest.currency-api.pages.dev/v1/currencies/${lowerBase}.json`
+    ];
+    let lastError;
+    for (const url of urls) {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        const ratesForBase = data[lowerBase];
+        if (!ratesForBase || typeof ratesForBase !== "object") {
+          throw new Error("The currency-api response did not contain exchange rates.");
+        }
+        currencyApiLatestCache.set(lowerBase, ratesForBase);
+        return ratesForBase;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    throw new Error(`Could not load current ${base} rates: ${lastError.message}`);
+  })();
+
+  pendingCurrencyApiLatestRates.set(lowerBase, request);
+  try {
+    return await request;
+  } finally {
+    pendingCurrencyApiLatestRates.delete(lowerBase);
   }
 }
 
@@ -464,7 +695,7 @@ function renderComparisonTags() {
 
     const tag = document.createElement("span");
     tag.className = "compare-tag";
-    tag.appendChild(createFlag(currency.countryCode, currency.countryName));
+    tag.appendChild(createFlag(currency));
     const text = document.createElement("span");
     text.textContent = currency.code;
     tag.appendChild(text);
@@ -486,36 +717,145 @@ function renderComparisonTags() {
   document.getElementById("add-comparison").disabled = comparisonCodes.length >= 3;
 }
 
-async function fetchTrendData(base, start, end, forceRefresh) {
-  const cacheKey = `${base}:${start}:${end}`;
-  if (forceRefresh) trendCache.delete(cacheKey);
-  if (trendCache.has(cacheKey)) return trendCache.get(cacheKey);
-  if (pendingTrendRequests.has(cacheKey)) return pendingTrendRequests.get(cacheKey);
+function getTrendSeriesCacheKey(base, target, range, start, end) {
+  return `${base}:${target}:${range}:${start}:${end}`;
+}
+
+async function fetchFrankfurterSeries(base, target, start, end) {
+  const url = `https://api.frankfurter.dev/v1/${start}..${end}?base=${encodeURIComponent(base)}&symbols=${encodeURIComponent(target)}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`Frankfurter returned HTTP ${response.status}.`);
+  const data = await response.json();
+  if (!data.rates || typeof data.rates !== "object") {
+    throw new Error("The Frankfurter response did not contain exchange rates.");
+  }
+
+  const series = Object.entries(data.rates)
+    .map(([date, ratesForDate]) => ({ date, rate: ratesForDate[target] }))
+    .filter((point) => Number.isFinite(point.rate) && point.rate > 0)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  if (!series.length) throw new Error(`No historical ${base}/${target} rates were returned.`);
+  return series;
+}
+
+async function fetchCurrencyApiSnapshot(date, base) {
+  const lowerBase = base.toLowerCase();
+  const cacheKey = `${date}:${lowerBase}`;
+  if (currencyApiSnapshotCache.has(cacheKey)) return currencyApiSnapshotCache.get(cacheKey);
+  if (pendingCurrencyApiSnapshots.has(cacheKey)) return pendingCurrencyApiSnapshots.get(cacheKey);
 
   const request = (async () => {
-    const url = `https://api.frankfurter.dev/v1/${start}..${end}?base=${encodeURIComponent(base)}`;
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-    const data = await response.json();
-    if (!data.rates || typeof data.rates !== "object") {
-      throw new Error("The history response did not contain exchange rates.");
+    const today = new Date().toISOString().slice(0, 10);
+    const versionDate = date === today ? "latest" : date;
+    const urls = [
+      `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${versionDate}/v1/currencies/${lowerBase}.json`,
+      `https://${versionDate}.currency-api.pages.dev/v1/currencies/${lowerBase}.json`
+    ];
+    let lastError;
+
+    for (const url of urls) {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        const ratesForDate = data[lowerBase];
+        if (!ratesForDate || typeof ratesForDate !== "object") {
+          throw new Error("The currency-api response did not contain exchange rates.");
+        }
+
+        const snapshot = { date, rates: ratesForDate };
+        currencyApiSnapshotCache.set(cacheKey, snapshot);
+        return snapshot;
+      } catch (error) {
+        lastError = error;
+      }
     }
-    trendCache.set(cacheKey, data);
-    return data;
+
+    throw new Error(`Could not load ${base} rates for ${date}: ${lastError.message}`);
   })();
 
-  pendingTrendRequests.set(cacheKey, request);
+  pendingCurrencyApiSnapshots.set(cacheKey, request);
   try {
     return await request;
   } finally {
-    pendingTrendRequests.delete(cacheKey);
+    pendingCurrencyApiSnapshots.delete(cacheKey);
   }
+}
+
+async function fetchCurrencyApiSnapshots(dates, base) {
+  const snapshots = new Map();
+  const batchSize = 9;
+  for (let offset = 0; offset < dates.length; offset += batchSize) {
+    const batch = dates.slice(offset, offset + batchSize);
+    const results = await Promise.all(batch.map(async (date) => {
+      try {
+        return { date, snapshot: await fetchCurrencyApiSnapshot(date, base) };
+      } catch (error) {
+        console.warn(`Skipping unavailable ${base} rates for ${date}:`, error);
+        return { date, snapshot: null };
+      }
+    }));
+    results.forEach(({ date, snapshot }) => {
+      if (snapshot) snapshots.set(date, snapshot);
+    });
+  }
+  return snapshots;
+}
+
+async function fetchCurrencyApiSeries(base, target, range, start, end) {
+  const sampleDates = getSampleDates(start, end, range);
+  const snapshots = await fetchCurrencyApiSnapshots(sampleDates, base);
+  const lowerTarget = target.toLowerCase();
+  const series = sampleDates
+    .map((date) => {
+      const snapshot = snapshots.get(date);
+      return snapshot
+        ? { date: snapshot.date || date, rate: snapshot.rates[lowerTarget] }
+        : null;
+    })
+    .filter((point) => point && Number.isFinite(point.rate) && point.rate > 0)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  if (!series.length) throw new Error(`No historical ${base}/${target} rates were returned.`);
+  return series;
+}
+
+async function getRateSeries(base, target, range) {
+  const { start, end } = getDateRange(range);
+  const cacheKey = getTrendSeriesCacheKey(base, target, range, start, end);
+  if (trendSeriesCache.has(cacheKey)) return trendSeriesCache.get(cacheKey);
+  if (pendingTrendSeries.has(cacheKey)) return pendingTrendSeries.get(cacheKey);
+
+  const request = (async () => {
+    const usesFrankfurter = frankfurterCurrencies.has(base) && frankfurterCurrencies.has(target);
+    const series = usesFrankfurter
+      ? await fetchFrankfurterSeries(base, target, start, end)
+      : await fetchCurrencyApiSeries(base, target, range, start, end);
+    trendSeriesCache.set(cacheKey, series);
+    return series;
+  })();
+
+  pendingTrendSeries.set(cacheKey, request);
+  try {
+    return await request;
+  } finally {
+    pendingTrendSeries.delete(cacheKey);
+  }
+}
+
+function clearTrendCaches(base, targets, range, start, end) {
+  targets.forEach((target) => {
+    trendSeriesCache.delete(getTrendSeriesCacheKey(base, target, range, start, end));
+  });
+  const snapshotDates = new Set([...getSampleDates(start, end, range), start, end]);
+  snapshotDates.forEach((date) => currencyApiSnapshotCache.delete(`${date}:${base.toLowerCase()}`));
 }
 
 async function loadTrends(forceRefresh) {
   const base = trendBasePicker.selectedCode;
   const quote = trendQuotePicker.selectedCode;
   const requestId = ++trendRequestId;
+  const pairNote = document.getElementById("chart-pair-note");
+  pairNote.hidden = !((base === "NPR" && quote === "INR") || (base === "INR" && quote === "NPR"));
   if (!base || !quote) return;
 
   if (base === quote) {
@@ -524,59 +864,90 @@ async function loadTrends(forceRefresh) {
   }
 
   const { start, end } = getDateRange(activeRange);
+  const comparisons = comparisonCodes.filter((code) => code !== base && code !== quote);
+  if (forceRefresh) clearTrendCaches(base, [quote, ...comparisons], activeRange, start, end);
   clearTrendError();
   setTrendLoading(true);
   document.getElementById("movers-base").textContent = base;
 
   try {
-    const data = await fetchTrendData(base, start, end, forceRefresh);
+    const [mainSeries, ...comparisonSeries] = await Promise.all([
+      getRateSeries(base, quote, activeRange),
+      ...comparisons.map((code) => getRateSeries(base, code, activeRange)
+        .catch((error) => {
+          console.warn(`Could not load comparison series for ${code}:`, error);
+          return [];
+        }))
+    ]);
     if (requestId !== trendRequestId) return;
-    renderTrendData(data, base, quote, start, end);
+    const availableComparisons = comparisons.filter((code, index) => comparisonSeries[index].length > 1);
+    const allSeries = [{ code: quote, points: mainSeries }].concat(
+      availableComparisons.map((code) => ({
+        code,
+        points: comparisonSeries[comparisons.indexOf(code)]
+      }))
+    );
+    const history = {};
+    const dates = new Set();
+    allSeries.forEach(({ code, points }) => {
+      points.forEach(({ date, rate }) => {
+        dates.add(date);
+        if (!history[date]) history[date] = {};
+        history[date][code] = rate;
+      });
+    });
+    await renderTrendData(
+      mainSeries,
+      history,
+      Array.from(dates).sort(),
+      base,
+      quote,
+      availableComparisons,
+      start,
+      end,
+      requestId
+    );
   } catch (error) {
     if (requestId !== trendRequestId) return;
     console.error("Could not load trend data:", error);
-    showTrendError("Trend data could not be loaded. Check your connection and retry.");
+    showTrendError("Trend data for this pair could not be loaded. Please check your connection and retry.");
   }
 }
 
-function renderTrendData(data, base, quote, start, end) {
-  const dates = Object.keys(data.rates).sort();
-  const quoteValues = dates
-    .map((date) => ({ date, value: data.rates[date][quote] }))
-    .filter((point) => Number.isFinite(point.value));
-  if (!quoteValues.length) {
-    throw new Error(`${quote} is not available in the selected historical range.`);
+async function renderTrendData(series, history, chartDates, base, quote, comparisons, start, end, requestId) {
+  if (series.length < 2) {
+    throw new Error(`Not enough historical ${base}/${quote} rates were available for this range.`);
   }
 
-  const values = quoteValues.map((point) => point.value);
+  const values = series.map((point) => point.rate);
   const first = values[0];
   const current = values[values.length - 1];
   const change = ((current - first) / first) * 100;
-  const high = quoteValues.reduce((best, point) => point.value > best.value ? point : best);
-  const low = quoteValues.reduce((best, point) => point.value < best.value ? point : best);
+  const high = series.reduce((best, point) => point.rate > best.rate ? point : best);
+  const low = series.reduce((best, point) => point.rate < best.rate ? point : best);
   const average = values.reduce((sum, value) => sum + value, 0) / values.length;
-  latestTrendDate = dates[dates.length - 1];
+  latestTrendDate = series[series.length - 1].date;
 
   setStat("stat-current", formatRate(current));
   setStat("stat-change", `${change >= 0 ? "↑ +" : "↓ "}${change.toFixed(2)}%`);
   document.getElementById("stat-change").classList.toggle("positive", change >= 0);
   document.getElementById("stat-change").classList.toggle("negative", change < 0);
-  setStat("stat-high", formatRate(high.value));
-  setStat("stat-low", formatRate(low.value));
+  setStat("stat-high", formatRate(high.rate));
+  setStat("stat-low", formatRate(low.rate));
   setStat("stat-average", formatRate(average));
   document.getElementById("stat-current-caption").textContent = `${base} / ${quote}`;
   document.getElementById("stat-high-date").textContent = formatDate(high.date);
   document.getElementById("stat-low-date").textContent = formatDate(low.date);
   document.getElementById("chart-unit").textContent = `${quote} per ${base}`;
   document.getElementById("chart-subtitle").textContent =
-    `${formatDate(start)} – ${formatDate(latestTrendDate)} · ${dates.length} daily observations`;
+    `${formatDate(start)} – ${formatDate(latestTrendDate)} · ${series.length} observations`;
 
-  const comparisons = comparisonCodes.filter((code) => code !== base && code !== quote);
-  renderTrendChart(data.rates, dates, base, quote, comparisons);
-  renderTopMovers(data.rates, dates, base);
+  renderTrendChart(history, chartDates, base, quote, comparisons);
+  await renderTopMovers(base, start, end, requestId);
+  if (requestId !== trendRequestId) return;
   document.getElementById("movers-base").textContent = base;
   document.getElementById("trend-updated").textContent =
-    `Frankfurter historical data through ${latestTrendDate}.`;
+    `Historical rates through ${latestTrendDate}.`;
   updateFooterTimestamp();
   setTrendLoading(false);
 }
@@ -587,17 +958,38 @@ function setStat(id, value) {
   element.classList.remove("skeleton-text");
 }
 
-function renderTopMovers(history, dates, base) {
+async function renderTopMovers(base, start, end, requestId) {
+  let startSnapshot;
+  let endSnapshot;
+  try {
+    [startSnapshot, endSnapshot] = await Promise.all([
+      fetchCurrencyApiSnapshot(start, base),
+      fetchCurrencyApiSnapshot(end, base)
+    ]);
+  } catch (error) {
+    if (requestId !== trendRequestId) return;
+    console.warn(`Could not load two-date mover data for ${base}:`, error);
+    document.getElementById("gainers-list").replaceChildren();
+    document.getElementById("losers-list").replaceChildren();
+    trendErrorMessage.textContent = "Top movers could not be loaded. Please retry.";
+    trendError.hidden = false;
+    return;
+  }
+  if (requestId !== trendRequestId) return;
+
+  const startRates = startSnapshot.rates;
+  const endRates = endSnapshot.rates;
   const movers = trendCurrencies
     .filter((currency) => currency.code !== base)
     .map((currency) => {
-      const points = dates
-        .map((date) => ({ date, value: history[date][currency.code] }))
-        .filter((point) => Number.isFinite(point.value));
-      if (points.length < 2 || !points[0].value) return null;
+      const lowerCode = currency.code.toLowerCase();
+      const startRate = startRates[lowerCode];
+      const endRate = endRates[lowerCode];
+      if (!Number.isFinite(startRate) || startRate <= 0 ||
+          !Number.isFinite(endRate) || endRate <= 0) return null;
       return {
         currency,
-        change: ((points[points.length - 1].value - points[0].value) / points[0].value) * 100
+        change: ((endRate - startRate) / startRate) * 100
       };
     })
     .filter(Boolean);
@@ -625,7 +1017,7 @@ function renderMoverList(id, movers, isGainer) {
   movers.forEach(({ currency, change }) => {
     const row = document.createElement("div");
     row.className = "mover-item";
-    row.appendChild(createFlag(currency.countryCode, currency.countryName));
+    row.appendChild(createFlag(currency));
 
     const label = document.createElement("span");
     label.className = "mover-currency";
@@ -753,8 +1145,10 @@ const footerUpdatedEl = document.getElementById("footer-updated");
 let rates = {};
 let lastUpdated = "";
 let converterCurrencies = [];
+let conversionRequestId = 0;
 
 async function loadCurrencies() {
+  rateInfoEl.textContent = "";
   try {
     const response = await fetch("https://open.er-api.com/v6/latest/USD");
     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
@@ -765,22 +1159,38 @@ async function loadCurrencies() {
 
     rates = data.rates;
     lastUpdated = data.time_last_update_utc || "";
-    converterCurrencies = Object.keys(rates)
-      .sort()
-      .map((code) => buildCurrencyItem(code));
-
-    setPickerItems(fromPicker, converterCurrencies, "");
-    setPickerItems(toPicker, converterCurrencies, "");
-    renderPopularRates();
-    updateFooterTimestamp();
   } catch (error) {
-    console.error("Could not load currencies:", error);
+    rates = {};
+    console.error("Could not load open.er-api.com rates:", error);
+    rateInfoEl.textContent = "Live fiat rates could not be loaded. Please try again later.";
+  }
+
+  let currencyApiRates = {};
+  try {
+    currencyApiRates = await fetchLatestCurrencyRates("USD");
+  } catch (error) {
+    console.error("Could not load currency-api rates:", error);
+  }
+
+  const currencyApiCodes = new Set(Object.keys(currencyApiRates).map((code) => code.toUpperCase()));
+  converterCurrencies = CURRENCIES.filter((currency) => currency.group === "crypto"
+    ? currencyApiCodes.has(currency.code)
+    : Object.prototype.hasOwnProperty.call(rates, currency.code));
+
+  if (!converterCurrencies.length) {
+    console.error("No curated currencies have available converter rates.");
     fromPicker.input.placeholder = "Failed to load currencies";
     toPicker.input.placeholder = "Failed to load currencies";
     fromPicker.input.disabled = true;
     toPicker.input.disabled = true;
-    rateInfoEl.textContent = "Live currency rates could not be loaded. Please refresh to try again.";
+    rateInfoEl.textContent = "Currency rates could not be loaded. Please refresh to try again.";
+    return;
   }
+
+  setPickerItems(fromPicker, converterCurrencies, "");
+  setPickerItems(toPicker, converterCurrencies, "");
+  renderPopularRates();
+  updateFooterTimestamp();
 }
 
 function showConversionResult(target, message, isError) {
@@ -793,7 +1203,35 @@ function showConversionResult(target, message, isError) {
   }
 }
 
-function convertPair(amountElement, fromPickerForConversion, toPickerForConversion, output, rateOutput) {
+async function getRate(from, to) {
+  if (from === to) return 1;
+
+  if (CRYPTO_CODES.has(from) || CRYPTO_CODES.has(to)) {
+    const currentRates = await fetchLatestCurrencyRates(from);
+    const rate = currentRates[to.toLowerCase()];
+    if (!Number.isFinite(rate) || rate <= 0) {
+      throw new Error(`No current ${from}/${to} rate was returned.`);
+    }
+    return rate;
+  }
+
+  if (!Number.isFinite(rates[from]) || rates[from] <= 0 ||
+      !Number.isFinite(rates[to]) || rates[to] <= 0) {
+    throw new Error(`No current ${from}/${to} rate was returned.`);
+  }
+  return rates[to] / rates[from];
+}
+
+function formatConversionNumber(value, from, to) {
+  const maxDigits = CRYPTO_CODES.has(from) || CRYPTO_CODES.has(to) ? 8 : 2;
+  return new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: maxDigits
+  }).format(value);
+}
+
+async function convertPair(amountElement, fromPickerForConversion, toPickerForConversion, output, rateOutput) {
+  const requestId = ++conversionRequestId;
   const amount = parseFloat(amountElement.value);
   const from = fromPickerForConversion.selectedCode;
   const to = toPickerForConversion.selectedCode;
@@ -810,20 +1248,25 @@ function convertPair(amountElement, fromPickerForConversion, toPickerForConversi
     showError("Please enter a valid amount.");
     return;
   }
-  if (!rates[from] || !rates[to]) {
-    showError("Rates are not loaded yet. Try again.");
-    return;
+
+  try {
+    const rate = await getRate(from, to);
+    if (requestId !== conversionRequestId) return;
+    const converted = amount * rate;
+
+    showConversionResult(
+      output,
+      `${amount} ${from} = ${formatConversionNumber(converted, from, to)} ${to}`,
+      false
+    );
+    const updatedText = lastUpdated ? ` · Updated ${lastUpdated}` : "";
+    rateOutput.textContent =
+      `1 ${from} = ${formatConversionNumber(rate, from, to)} ${to}${updatedText}`;
+  } catch (error) {
+    if (requestId !== conversionRequestId) return;
+    console.error(`Could not convert ${from} to ${to}:`, error);
+    showError("Exchange rates could not be loaded. Please try again.");
   }
-
-  const converted = (amount / rates[from]) * rates[to];
-  const formatted = new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 2
-  }).format(converted);
-
-  showConversionResult(output, `${amount} ${from} = ${formatted} ${to}`, false);
-  const rate = rates[to] / rates[from];
-  rateOutput.textContent =
-    `1 ${from} = ${rate.toFixed(4)} ${to} · Updated ${lastUpdated}`;
 }
 
 function convert() {
@@ -863,7 +1306,7 @@ function renderPopularRates() {
     button.className = "popular-rate";
     button.type = "button";
     button.setAttribute("aria-label", `Convert 1 USD to ${currency.name}`);
-    button.appendChild(createFlag(currency.countryCode, currency.countryName));
+    button.appendChild(createFlag(currency));
 
     const text = document.createElement("span");
     text.className = "popular-rate-text";
